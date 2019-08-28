@@ -5,6 +5,16 @@ public class ProductInventory {
 	private Long id;
 	private Integer value;
 	private Long productId;
+
+	public ProductInventory(){
+
+	}
+
+	public ProductInventory(Long id, Long productId, Integer value) {
+		this.id = id;
+		this.productId = productId;
+		this.value = value;
+	}
 	
 	public Long getId() {
 		return id;
