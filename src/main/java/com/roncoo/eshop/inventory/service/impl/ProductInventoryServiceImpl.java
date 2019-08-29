@@ -28,6 +28,7 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
 
 	public void update(ProductInventory productInventory) {
 		productInventoryMapper.update(productInventory);
+		System.out.println("===========日志===========: 已修改数据库中的库存，商品id=" + productInventory.getProductId() + ", 商品库存数量=" + productInventory.getValue());
 	}
 
 	public void delete(Long id) {
@@ -47,13 +48,17 @@ public class ProductInventoryServiceImpl implements ProductInventoryService {
 	@Override
 	public void removeProductInventoryCache(ProductInventory productInventory) {
 		Jedis jedis = jedisPool.getResource();
-		jedis.del(ProductInventoryServiceImpl.PREFIX + productInventory.getProductId());
+		String key = ProductInventoryServiceImpl.PREFIX + productInventory.getProductId();
+		jedis.del(key);
+		System.out.println("===========日志===========: 已删除redis中的缓存，key=" + key);
 	}
 
 	@Override
 	public void setProductInventoryCache(ProductInventory productInventory) {
 		Jedis jedis = jedisPool.getResource();
-		jedis.set(ProductInventoryServiceImpl.PREFIX + productInventory.getProductId(), JSONObject.toJSONString(productInventory));
+		String key = ProductInventoryServiceImpl.PREFIX + productInventory.getProductId();
+		jedis.set(key, JSONObject.toJSONString(productInventory));
+		System.out.println("===========日志===========: 已更新商品库存的缓存，商品id=" + productInventory.getProductId() + ", 商品库存数量=" + productInventory.getValue() + ", key=" + key);
 	}
 
 	/**

@@ -32,7 +32,9 @@ public class ProductInventoryCacheRefreshRequest implements Request{
 
     @Override
     public void process() {
+        System.out.println("===========日志===========: 询到商品最新的库存数量，商品id=" + productId);
         ProductInventory productInventory = productInventoryService.findByProductId(productId);
+        System.out.println("===========日志===========: 已查询到商品最新的库存数量，商品id=" + productId + ", 商品库存数量=" + productInventory.getValue());
         productInventoryService.setProductInventoryCache(productInventory);
     }
 

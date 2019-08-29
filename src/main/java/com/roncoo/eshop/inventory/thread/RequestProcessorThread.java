@@ -26,6 +26,7 @@ public class RequestProcessorThread implements Callable<Boolean> {
             while(true) {
 
                 Request request = queue.take();
+                System.out.println("===========日志===========: 取得工作请求，商品id=" + request.getProductId());
                 boolean forceRfresh = request.isForceRefresh();
                 if(!forceRfresh){
                     RequestQueue requestQueue = RequestQueue.getInstance();
@@ -47,7 +48,7 @@ public class RequestProcessorThread implements Callable<Boolean> {
                         // 说明前面已经有一个数据库更新请求+一个缓存刷新请求了，大家想一想
                         if(flag != null && !flag) {
                             // 对于这种读请求，直接就过滤掉
-                            return true;
+                            continue;
                         }
                     }
                 }
@@ -60,6 +61,7 @@ public class RequestProcessorThread implements Callable<Boolean> {
                 // 如果说数据从redis中被自动清理掉了以后
                 // 然后后面又来一个读请求，此时如果进来，发现标志位是false，就不会去执行这个刷新的操作了
                 // 所以在执行完这个读请求之后，实际上这个标志位是停留在false的
+
             }
         }catch (Exception e) {
             e.printStackTrace();

@@ -3,9 +3,11 @@ package com.roncoo.eshop.inventory.service.impl;
 import com.roncoo.eshop.inventory.request.Request;
 import com.roncoo.eshop.inventory.request.RequestQueue;
 import com.roncoo.eshop.inventory.service.RequestAsyncProcessService;
+import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
+@Service
 public class RequestAsyncProcessServiceImpl implements RequestAsyncProcessService {
 
     @Override
@@ -13,6 +15,7 @@ public class RequestAsyncProcessServiceImpl implements RequestAsyncProcessServic
         try {
             ArrayBlockingQueue<Request> queue = getRoutingQueue(request.getProductId());
             queue.put(request);
+            System.out.println("===========日志===========:  queue size : " + queue.size());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -29,7 +32,7 @@ public class RequestAsyncProcessServiceImpl implements RequestAsyncProcessServic
         // 用内存队列的数量对hash值取模之后，结果一定是在0~7之间
         // 所以任何一个商品id都会被固定路由到同样的一个内存队列中去的
         int index = (requestQueue.queueSize() - 1) & hash;
-
+        System.out.println("===========日志===========: 路由内存队列，商品id=" + productId + ", 队列索引=" + index);
         return requestQueue.getQueue(index);
     }
 
